@@ -1,0 +1,27 @@
+{
+  "name": "enno",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000t\u0000e\u0000s\u0000t\u0000_\u0000r\u0000e\u0000p\u0000o\u0000\r\u0000 \u0000#\u0000 \u0000t\u0000e\u0000s\u0000t\u0000_\u0000r\u0000e\u0000p\u0000o\u0000_\u0000\r\u0000 \u0000#\u0000 \u0000t\u0000e\u0000s\u0000t\u0000_\u0000r\u0000e\u0000p\u0000o\u0000_\u0000\r\u0000 \u0000#\u0000 \u0000f\u0000o\u0000o\u0000d\u0000\r\u0000 \u0000#\u0000 \u0000f\u0000o\u0000o\u0000d\u0000\r\u0000 \u0000",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamedsiraj20104/food.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohamedsiraj20104/food/issues"
+  },
+  "homepage": "https://github.com/mohamedsiraj20104/food#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  }
+}
