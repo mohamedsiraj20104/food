@@ -49,23 +49,25 @@ app.post('/submitForm', async (req, res) => {
   const { name, email, location, mobile_number, veg_or_non_veg, cooked_time } = req.body;
 
   try {
-
-    console.log(name, email, location, mobile_number, veg_or_non_veg, cooked_time , "req")
     // Split the location into latitude and longitude
     const [latitude, longitude] = location.split(',');
-    console.log(latitude, longitude, "lati")
+
+    // Initialize address with default value
+    let address = "Kilakarai Mohamed Sathak College";
 
     // Call the geolocation API to get the address
-    const geoResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-    const address = geoResponse.data.display_name;
-
-    console.log(address, "add")
+    try {
+      const geoResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+      address = geoResponse.data.display_name;
+    } catch (geoError) {
+      console.error('Error fetching address from geolocation API:', geoError);
+    }
 
     // Create a new user with the resolved address
     const user = new User({
       name, email, location, mobile_number, veg_or_non_veg, cooked_time, address
     });
-    
+
     // Save the user to the database
     const result = await user.save();
     console.log('User saved with address:', result);
