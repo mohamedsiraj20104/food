@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Added CORS middleware
 const path = require('path');
+const axios = require('axios')
+
 
 const app = express();
 const PORT = 3000;
@@ -25,8 +27,9 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     mobile_number: String,
     veg_or_non_veg: String,
     cooked_time: String,
+    address: String, // Add an address field
   });
-
+  
 const User = mongoose.model('User', userSchema);
 
 app.use(cors()); // Enable CORS
@@ -43,27 +46,30 @@ app.get('/', (req, res) => {
 });
 
 app.post('/submitForm', async (req, res) => {
-    const { name, email, location, mobile_number, veg_or_non_veg, cooked_time } = req.body;
+  const { name, email, location, mobile_number, veg_or_non_veg, cooked_time } = req.body;
   
-    const user = new User({ 
-      name,
-      email,
-      location,
-      mobile_number,
-      veg_or_non_veg,
-      cooked_time,
-    });
+  // Split the location into latitude and longitude
+  const lati_and_longi = location.split(',');
 
   try {
-    const result = await user.save();
-    console.log('User saved:', result);
+    // Call the geolocation API
+    const geoResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lati_and_longi[0]}&lon=${lati_and_longi[1]}&format=json`);
+    const address = geoResponse.data.display_name;
 
+    // Create a new user with the resolved address
+    const user = new User({
+      name, email, location, mobile_number, veg_or_non_veg, cooked_time, address
+    });
+
+    const result = await user.save();
+    console.log('User saved with address:', result);
     res.json({ success: true });
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.error('Error saving user or fetching address:', error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
