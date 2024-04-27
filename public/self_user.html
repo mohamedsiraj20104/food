@@ -332,7 +332,7 @@
 
             console.log(name, email, location, mobile_number, veg_or_non_veg, cooked_time);
 
-            fetch('http://localhost:3000/submitForm', {
+            fetch('/submitForm', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
