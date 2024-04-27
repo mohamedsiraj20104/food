@@ -1,15 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const cors = require('cors'); // Added CORS middleware
 const path = require('path');
-const axios = require('axios');
 
 const app = express();
-const PORT =  3000; // Use the provided port or default to 3000
+const PORT = 3000;
 
 // Connect to MongoDB
-const mongoURI = 'mongodb+srv://siraj:2FJ63FMlPnQHHpcT@cluster0.xxdhvm1.mongodb.net/LOGIN_DB?retryWrites=true&w=majority'; // Update with your MongoDB connection string
+const mongoURI = 'mongodb+srv://siraj:2FJ63FMlPnQHHpcT@cluster0.xxdhvm1.mongodb.net/LOGIN_DB?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -17,68 +16,55 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   })
   .catch((err) => {
     console.error('Error connecting to MongoDB:', err);
-    process.exit(1); // Exit the process if unable to connect to MongoDB
   });
 
-// Define the user schema
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  location: String,
-  mobile_number: String,
-  veg_or_non_veg: String,
-  cooked_time: String,
-  address: String,
-});
+  const userSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    location: String,
+    mobile_number: String,
+    veg_or_non_veg: String,
+    cooked_time: String,
+  });
 
 const User = mongoose.model('User', userSchema);
 
 app.use(cors()); // Enable CORS
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.options('*', cors()); // Handle CORS preflight requests
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the index.html file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Handle form submission
 app.post('/submitForm', async (req, res) => {
-  const { name, email, location, mobile_number, veg_or_non_veg, cooked_time } = req.body;
-
-  try {
-    // Split the location into latitude and longitude
-    const [latitude, longitude] = location.split(',');
-
-    // Initialize address with default value
-    let address = "Kilakarai Mohamed Sathak College";
-
-    // Call the geolocation API to get the address
-    try {
-      const geoResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-      address = geoResponse.data.display_name;
-    } catch (geoError) {
-      console.error('Error fetching address from geolocation API:', geoError);
-    }
-
-    // Create a new user with the resolved address
-    const user = new User({
-      name, email, location, mobile_number, veg_or_non_veg, cooked_time, address
+    const { name, email, location, mobile_number, veg_or_non_veg, cooked_time } = req.body;
+  
+    const user = new User({ 
+      name,
+      email,
+      location,
+      mobile_number,
+      veg_or_non_veg,
+      cooked_time,
     });
 
-    // Save the user to the database
+  try {
     const result = await user.save();
-    console.log('User saved with address:', result);
+    console.log('User saved:', result);
+
     res.json({ success: true });
   } catch (error) {
-    console.error('Error saving user or fetching address:', error);
+    console.error('Error saving user:', error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
