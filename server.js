@@ -59,7 +59,7 @@ app.post('/submitForm', async (req, res) => {
     const geoResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
     const address = geoResponse.data.display_name;
 
-    console.log(address, "add)
+    console.log(address, "add")
 
     // Create a new user with the resolved address
     const user = new User({
