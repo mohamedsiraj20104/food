@@ -4,10 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors'); // Added CORS middleware
 const path = require('path');
 const axios = require('axios')
-
-
 const app = express();
 const PORT = 3000;
+app.use(cors()); // Enable CORS
 
 // Connect to MongoDB
 const mongoURI = 'mongodb+srv://siraj:2FJ63FMlPnQHHpcT@cluster0.xxdhvm1.mongodb.net/LOGIN_DB?retryWrites=true&w=majority/LOGIN_DB';
@@ -32,7 +31,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   
 const User = mongoose.model('User', userSchema);
 
-app.use(cors()); // Enable CORS
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
