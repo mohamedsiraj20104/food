@@ -6,7 +6,7 @@ const path = require('path');
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Use the provided port or default to 3000
+const PORT =  3000; // Use the provided port or default to 3000
 
 // Connect to MongoDB
 const mongoURI = 'mongodb+srv://siraj:2FJ63FMlPnQHHpcT@cluster0.xxdhvm1.mongodb.net/LOGIN_DB?retryWrites=true&w=majority'; // Update with your MongoDB connection string
